@@ -350,3 +350,7 @@ select
 from despachos_2022 as d22
 	left join despachos_2023 as d23
 		on d22.mes = d23.mes
+
+
+-- 13. Calcular el aumento porcentual anual en el total de recogidas por cultivo entre dos años consecutivos, 
+-- comparando específicamente las cantidades recolectadas en 2022 y 2023.
