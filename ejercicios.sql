@@ -98,15 +98,15 @@ having sum(r.cantidad)>1000
 
 -- 8. Determinar los meses en los cuales el valor total de despachos superó 1500 unidades:
 
--- 10. Calcular los lotes que tuvieron un ingreso proyectado mayor a 100 millones en el 2023. El ingreso proyectado se calcula como el precio multiplicado por la cantidad de producto recogido.
+-- 9. Calcular los lotes que tuvieron un ingreso proyectado mayor a 100 millones en el 2023. El ingreso proyectado se calcula como el precio multiplicado por la cantidad de producto recogido.
 
 -- SubQueries:
 
--- 9. Listar todas las fincas que han aumentado su producción en más de 20% entre el 2022 y el 2023
+-- 10. Listar todas las fincas que han aumentado su producción en más de 20% entre el 2022 y el 2023
 
--- 10. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el promedio general
+-- 11. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el promedio general
 
--- 11. Determinar el cultivo más rentable basado en el precio promedio multiplicado por la cantidad recolectada
+-- 12. Determinar el cultivo más rentable basado en el precio promedio multiplicado por la cantidad recolectada
 
--- 12. Comparar el total facturado en despachos por cada cliente en los últimos 12 meses versus el año anterior
+-- 13. Comparar el total facturado en despachos por cada cliente en los últimos 12 meses versus el año anterior
 
