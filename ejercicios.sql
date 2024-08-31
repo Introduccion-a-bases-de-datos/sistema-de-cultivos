@@ -101,7 +101,7 @@ having sum(r.cantidad)>1000
 
 -- SubQueries:
 
--- 9. Listar los clientes que han hecho pedidos en cada uno de los últimos tres meses:
+-- 9. Listar los clientes que han hecho pedidos en cada uno de los últimos tres meses del 2023:
 
 -- 10. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el promedio general
 
