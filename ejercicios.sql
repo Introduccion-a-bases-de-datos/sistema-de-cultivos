@@ -157,12 +157,98 @@ from total_2022 as t2
 where (t3.total_recogido - t2.total_recogido) * 100 / t2.total_recogido < -20
 
 
--- 11. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el promedio general
--- Primero, necesitas calcular el promedio general de las recolecciones. Usa un join entre las tablas lote y recogida para obtener esta información. Una vez tengas 
--- el promedio general, procede a calcular el promedio de recolecciones por cada lote individualmente, usando las mismas tablas. 
+-- 11. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el 
+-- promedio general del cultivo de ese lote
+-- Primero, necesitas calcular el promedio general de las recolecciones. 
+-- Usa un join entre las tablas lote y recogida para obtener esta información. Una vez tengas 
+-- el promedio general, procede a calcular el promedio de recolecciones por cada lote individualmente, 
+--usando las mismas tablas. 
 -- Finalmente, compara el promedio de cada lote con el promedio general y selecciona 
--- los lotes cuyo promedio supera el general. Este proceso puede ser facilitado utilizando subconsultas o una CTE para mantener el promedio general 
+-- los lotes cuyo promedio supera el general. Este proceso puede ser facilitado utilizando
+-- subconsultas o una CTE para mantener el promedio general 
 -- accesible durante la comparación
+
+-- método 1: con common table expressions
+with promedio_general as (
+select 
+c.nombre as cultivo,
+avg(r.cantidad) as prom_general
+from cultivo.recogida as r
+	join cultivo.lote as l
+		on r.id_lote = l.id
+	join cultivo.m_cultivo as c
+		on l.id_cultivo = c.id
+group by c.nombre
+),
+promedio_por_lote as (
+select 
+c.nombre as cultivo, 
+f.nombre as finca, 
+l.nombre as lote,
+avg(r.cantidad) as prom_por_lote
+from cultivo.recogida as r
+	join cultivo.lote as l
+		on r.id_lote = l.id
+	join cultivo.m_cultivo as c
+		on l.id_cultivo = c.id
+	join cultivo.finca as f
+		on l.id_finca = f.id
+group by c.nombre, f.nombre, l.nombre
+)
+select * from promedio_por_lote as pl
+	join promedio_general as pg
+		on pl.cultivo = pg.cultivo
+where pl.prom_por_lote > pg.prom_general
+
+-- método 2: queries anidados
+select 
+c.nombre as cultivo, 
+f.nombre as finca, 
+l.nombre as lote,
+prom_general.prom_general,
+avg(r.cantidad) as prom_por_lote
+from cultivo.recogida as r
+	join cultivo.lote as l
+		on r.id_lote = l.id
+	join cultivo.m_cultivo as c
+		on l.id_cultivo = c.id
+	join cultivo.finca as f
+		on l.id_finca = f.id
+	join (
+	select 
+		c.nombre as cultivo,
+		avg(r.cantidad) as prom_general
+		from cultivo.recogida as r
+			join cultivo.lote as l
+				on r.id_lote = l.id
+			join cultivo.m_cultivo as c
+				on l.id_cultivo = c.id
+		group by c.nombre
+	) as prom_general
+		on prom_general.cultivo = c.nombre
+group by c.nombre, f.nombre, l.nombre, prom_general.prom_general
+having avg(r.cantidad)>prom_general.prom_general
+
+-- subquery en el having
+select 
+c.nombre as cultivo, 
+f.nombre as finca, 
+l.nombre as lote,
+avg(r.cantidad) as prom_por_lote
+from cultivo.recogida as r
+	join cultivo.lote as l
+		on r.id_lote = l.id
+	join cultivo.m_cultivo as c
+		on l.id_cultivo = c.id
+	join cultivo.finca as f
+		on l.id_finca = f.id
+group by c.nombre, f.nombre, l.nombre
+having avg(r.cantidad) > (
+		select 
+		avg(r.cantidad) as prom_general
+		from cultivo.recogida as r
+)
+
 
 -- 12. Calcular el incremento en facturación por cada mes entre el 2022 y el 2023.
 -- Para calcular el incremento en facturación por cada mes entre los años 2022 y 2023 
