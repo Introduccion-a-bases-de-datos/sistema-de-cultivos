@@ -66,6 +66,15 @@ order by total_recogido asc
 -- Queries con Having:
 
 -- 5. Encontrar cultivos cuyo promedio de precios haya sido superior a un valor específico en el último año:
+select 
+c.nombre,
+avg(p.valor) as promedio
+from cultivo.m_cultivo as c
+	join cultivo.precio as p
+		on p.id_cultivo = c.id
+where year(p.fecha) = 2023
+group by c.nombre
+having avg(p.valor) > 1
 
 -- 6. Listar las fincas que han tenido más de 10 lotes cultivados:
 
