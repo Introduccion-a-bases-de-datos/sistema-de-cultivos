@@ -1,5 +1,19 @@
 -- 0. Realizar un analisis exploratorio de datos
 
+select count(*) from cultivo.recogida
+
+select * from cultivo.recogida
+order by cantidad desc;
+
+
+select * from cultivo.recogida
+order by fecha asc;
+
+select * from cultivo.factura
+order by total asc
+
+delete from cultivo.precio
+where valor > 100
 
 -- Queries simples
 
