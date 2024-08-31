@@ -164,7 +164,13 @@ where (t3.total_recogido - t2.total_recogido) * 100 / t2.total_recogido < -20
 -- los lotes cuyo promedio supera el general. Este proceso puede ser facilitado utilizando subconsultas o una CTE para mantener el promedio general 
 -- accesible durante la comparación
 
--- 12. Determinar el cultivo más rentable basado en el precio promedio multiplicado por la cantidad recolectada
-
--- 13. Comparar el total facturado en despachos por cada cliente en los últimos 12 meses versus el año anterior
+-- 12. Calcular el incremento en facturación por cada mes entre el 2022 y el 2023.
+-- Para calcular el incremento en facturación por cada mes entre los años 2022 y 2023 
+-- utilizando Common Table Expressions (CTEs), primero debes estructurar dos CTEs separadas, 
+-- una para cada año. Cada CTE deberá agrupar las facturas por mes y sumar el total de facturación
+-- de cada mes. Luego, una vez que tienes estas dos tablas temporales de resultados para 2022 y 
+-- 2023, debes hacer un join usando el mes como llave. Esto te permitirá tener los totales de 
+-- facturación lado a lado para cada mes de ambos años en una única consulta. 
+-- El siguiente paso es calcular la diferencia entre los dos totales para cada mes, 
+-- lo que te dará el incremento o decremento en la facturación mes a mes.
 
