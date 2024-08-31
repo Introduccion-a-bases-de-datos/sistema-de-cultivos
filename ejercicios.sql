@@ -97,6 +97,15 @@ group by u.nombre
 having sum(r.cantidad)>1000
 
 -- 8. Determinar los meses en los cuales el valor total de despachos superó 1500 unidades:
+select 
+year(d.fecha), 
+month(d.fecha),
+sum(r.cantidad)
+from cultivo.despacho as d
+	join cultivo.recogida as r
+		on r.id_despacho = d.id
+group by year(d.fecha), month(d.fecha)
+having sum(r.cantidad)>80000000
 
 -- 9. Calcular los lotes que tuvieron un ingreso proyectado mayor a 100 millones en el 2023. El ingreso proyectado se calcula como el precio multiplicado por la cantidad de producto recogido.
 
