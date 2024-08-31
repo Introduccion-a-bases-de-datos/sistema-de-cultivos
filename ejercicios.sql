@@ -108,10 +108,54 @@ group by year(d.fecha), month(d.fecha)
 having sum(r.cantidad)>80000000
 
 -- 9. Calcular los lotes que tuvieron un ingreso proyectado mayor a 100 millones en el 2023. El ingreso proyectado se calcula como el precio multiplicado por la cantidad de producto recogido.
-
+select 
+l.nombre,
+sum(r.cantidad * p.valor) as ingreso_proyectado
+from cultivo.recogida as r
+	join cultivo.lote as l
+		on r.id_lote = l.id
+	join cultivo.m_cultivo as c
+		on l.id_cultivo = c.id
+	join cultivo.precio as p
+		on p.id_cultivo = c.id
+where year(r.fecha) = 2023
+group by l.nombre
+having sum(r.cantidad * p.valor) > 100000000
 -- SubQueries:
 
--- 10. Listar todas las fincas que han aumentado su producción en más de 20% entre el 2022 y el 2023
+-- 10. Listar todas las fincas que han bajaron su producción en más de 20% entre el 2022 y el 2023
+with total_2022 as (
+	select
+	f.nombre,
+	sum(r.cantidad) as total_recogido
+	from cultivo.finca as f
+		join cultivo.lote as l
+			on l.id_finca = f.id
+		join cultivo.recogida as r
+			on r.id_lote = l.id
+	where year(r.fecha) = 2022
+	group by f.nombre
+),
+total_2023 as (
+	select
+	f.nombre,
+	sum(r.cantidad) as total_recogido
+	from cultivo.finca as f
+		join cultivo.lote as l
+			on l.id_finca = f.id
+		join cultivo.recogida as r
+			on r.id_lote = l.id
+	where year(r.fecha) = 2023
+	group by f.nombre
+)
+select
+t2.nombre,
+(t3.total_recogido - t2.total_recogido) * 100 / t2.total_recogido as cambio_porcentual
+from total_2022 as t2
+	join total_2023 as t3
+		on t2.nombre = t3.nombre
+where (t3.total_recogido - t2.total_recogido) * 100 / t2.total_recogido < -20
+
 
 -- 11. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el promedio general
 
