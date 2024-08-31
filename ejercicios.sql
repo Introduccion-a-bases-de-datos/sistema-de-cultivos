@@ -287,3 +287,66 @@ from despachos_22 as d22
 	left join despachos_23 as d23
 		on d22.mes = d23.mes
 
+-- 12. Calcular el incremento en cantidad de despachos por cada mes entre el 2022 y el 2023.
+-- Para calcular el incremento en cantidad de despachos por cada mes entre los años 2022 y 2023 
+-- utilizando Common Table Expressions (CTEs), primero debes estructurar dos CTEs separadas, 
+-- una para cada año. Cada CTE deberá agrupar la cantidad de despachos por mes y año.
+-- Luego, una vez que tienes estas dos tablas temporales de resultados para 2022 y 
+-- 2023, debes hacer un join usando el mes como llave. Esto te permitirá tener los totales de 
+-- cantidad de despacho lado a lado para cada mes de ambos años en una única consulta. 
+-- El siguiente paso es calcular la diferencia entre los dos totales para cada mes, 
+-- lo que te dará el incremento o decremento en la facturación mes a mes.
+
+-- metodo 1: con CTE (common table expressions)
+with despachos_22 as (
+select 
+year(d.fecha) as año,
+month(d.fecha) as mes,
+count(d.id) as cantidad_despachos
+from cultivo.despacho as d
+where year(d.fecha) = 2022
+group by year(d.fecha), month(d.fecha)
+),
+despachos_23 as (
+select 
+year(d.fecha) as año,
+month(d.fecha) as mes,
+count(d.id) as cantidad_despachos
+from cultivo.despacho as d
+where year(d.fecha) = 2023
+group by year(d.fecha), month(d.fecha)
+)
+select
+d22.mes,
+d22.cantidad_despachos as despachos_2022,
+d23.cantidad_despachos as despachos_2023,
+coalesce(d23.cantidad_despachos,0) - d22.cantidad_despachos as diferencia
+from despachos_22 as d22
+	left join despachos_23 as d23
+		on d22.mes = d23.mes
+
+
+-- metodo 2: creacion de una vista
+
+create view cultivo.despachos_por_mes as
+select 
+year(d.fecha) as año,
+month(d.fecha) as mes,
+count(d.id) as cantidad_despachos
+from cultivo.despacho as d
+group by year(d.fecha), month(d.fecha);
+
+
+with despachos_2022 as (
+select * from cultivo.despachos_por_mes
+where año = 2022
+),
+despachos_2023 as (
+select * from cultivo.despachos_por_mes
+where año = 2023
+)
+select 
+*
+from despachos_2022 as d22
+	left join despachos_2023 as d23
+		on d22.mes = d23.mes
