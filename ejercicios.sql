@@ -87,3 +87,9 @@ having avg(p.valor) > 1
 
 -- 9. Listar los clientes que han hecho pedidos en cada uno de los últimos tres meses:
 
+-- 10. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el promedio general
+
+-- 11. Determinar el cultivo más rentable basado en el precio promedio multiplicado por la cantidad recolectada
+
+-- 12. Comparar el total facturado en despachos por cada cliente en los últimos 12 meses versus el año anterior
+
