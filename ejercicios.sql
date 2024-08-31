@@ -260,3 +260,30 @@ having avg(r.cantidad) > (
 -- El siguiente paso es calcular la diferencia entre los dos totales para cada mes, 
 -- lo que te dará el incremento o decremento en la facturación mes a mes.
 
+with despachos_22 as (
+select 
+year(d.fecha) as año,
+month(d.fecha) as mes,
+count(d.id) as cantidad_despachos
+from cultivo.despacho as d
+where year(d.fecha) = 2022
+group by year(d.fecha), month(d.fecha)
+),
+despachos_23 as (
+select 
+year(d.fecha) as año,
+month(d.fecha) as mes,
+count(d.id) as cantidad_despachos
+from cultivo.despacho as d
+where year(d.fecha) = 2023
+group by year(d.fecha), month(d.fecha)
+)
+select
+d22.mes,
+d22.cantidad_despachos as despachos_2022,
+d23.cantidad_despachos as despachos_2023,
+coalesce(d23.cantidad_despachos,0) - d22.cantidad_despachos as diferencia
+from despachos_22 as d22
+	left join despachos_23 as d23
+		on d22.mes = d23.mes
+
