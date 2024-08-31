@@ -31,10 +31,37 @@ group by c.nombre
 
 -- 2. Listar clientes y el número de despachos que han tenido durante el 2023, ordenados por la cantidad de despachos
 
+select 
+c.nombre,
+count(d.id) as conteo
+from cultivo.despacho as d
+	join cultivo.cliente as c
+		on d.id_cliente = c.id
+where year(d.fecha) = 2023
+group by c.nombre
+order by conteo desc
+
 -- 3. Calcular el precio promedio de cada cultivo a lo largo del tiempo:
 
--- 4. Identificar los lotes con menor rendimiento en el 2023 y ordenar por cantidad recolectada:
+select 
+c.nombre,
+avg(p.valor) as promedio
+from cultivo.m_cultivo as c
+	join cultivo.precio as p
+		on p.id_cultivo = c.id
+group by c.nombre
+order by promedio desc
 
+-- 4. Identificar los lotes con menor rendimiento en el 2023 y ordenar por cantidad recolectada:
+select 
+l.nombre,
+sum(r.cantidad) as "total_recogido"
+from cultivo.lote as l
+	join cultivo.recogida as r
+		on r.id_lote = l.id
+where year(r.fecha) = 2023
+group by l.nombre
+order by total_recogido asc
 
 -- Queries con Having:
 
