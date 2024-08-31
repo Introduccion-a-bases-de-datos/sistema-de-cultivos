@@ -87,6 +87,14 @@ group by f.nombre
 having count(l.id)>10
 
 -- 7. Identificar los usuarios que han recogido más de 1000 unidades en total:
+select
+u.nombre,
+sum(r.cantidad)
+from cultivo.usuario as u
+	join cultivo.recogida as r
+		on r.id_usuario = u.id
+group by u.nombre
+having sum(r.cantidad)>1000
 
 -- 8. Determinar los meses en los cuales el valor total de despachos superó 1500 unidades:
 
