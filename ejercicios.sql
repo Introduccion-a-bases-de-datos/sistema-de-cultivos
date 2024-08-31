@@ -1,4 +1,4 @@
--- 0. Realizar un analisis exploratorio de datos
+	-- 0. Realizar un analisis exploratorio de datos
 
 select count(*) from cultivo.recogida
 
@@ -158,6 +158,11 @@ where (t3.total_recogido - t2.total_recogido) * 100 / t2.total_recogido < -20
 
 
 -- 11. Obtener el promedio de recolecciones por lote y listar aquellos lotes que superan el promedio general
+-- Primero, necesitas calcular el promedio general de las recolecciones. Usa un join entre las tablas lote y recogida para obtener esta información. Una vez tengas 
+-- el promedio general, procede a calcular el promedio de recolecciones por cada lote individualmente, usando las mismas tablas. 
+-- Finalmente, compara el promedio de cada lote con el promedio general y selecciona 
+-- los lotes cuyo promedio supera el general. Este proceso puede ser facilitado utilizando subconsultas o una CTE para mantener el promedio general 
+-- accesible durante la comparación
 
 -- 12. Determinar el cultivo más rentable basado en el precio promedio multiplicado por la cantidad recolectada
 
