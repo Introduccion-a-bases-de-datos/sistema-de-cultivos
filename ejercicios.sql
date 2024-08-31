@@ -4,6 +4,16 @@
 -- Queries simples
 
 -- 1.  Obtener el total recolectado por cada cultivo en el 2023
+select 
+c.nombre,
+sum(r.cantidad)
+from cultivo.recogida as r
+	join cultivo.lote as l
+		on r.id_lote = l.id
+	join cultivo.m_cultivo as c
+		on l.id_cultivo = c.id
+where year(r.fecha)=2023
+group by c.nombre
 
 -- 2. Listar clientes y el número de despachos que han tenido durante el 2023, ordenados por la cantidad de despachos
 
