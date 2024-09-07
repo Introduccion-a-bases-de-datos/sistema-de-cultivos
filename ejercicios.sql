@@ -906,4 +906,71 @@ it.ingreso_total / tm.tamaño as ingreso_por_hectarea
 from ingreso_total it
 	join cultivo.tamaño_fincas as tm
 	 on it.finca = tm.finca
-		
+
+
+
+--  calcular la cantidad acumulada de palma recogida por mes en un lote especifico
+  select
+  l.nombre,
+  year(r.fecha) as año,
+  month(r.fecha) as mes,
+  sum(r.cantidad) as total,
+  sum(sum(r.cantidad)) over (partition by l.nombre order by year(r.fecha), month(r.fecha)) as total_acumulado
+from cultivo.lote as l
+  join cultivo.recogida as r
+    on r.id_lote = l.id
+  join cultivo.finca as f
+    on l.id_finca = f.id
+where l.nombre = 'Lote10' and f.nombre = 'La Ilusión'
+group by year(r.fecha), month(r.fecha), l.nombre
+order by año, mes;
+
+
+-- calcular las 3 recogidas mas grandes de cada lote
+with ranking as (
+select
+l.id,
+f.nombre as finca,
+l.nombre as lote,
+r.fecha as fecha,
+r.cantidad,
+row_number() over (partition by l.id order by r.cantidad desc) as rango
+from cultivo.lote as l
+	join cultivo.recogida as r
+		on r.id_lote = l.id
+	join cultivo.finca as f
+		on l.id_finca = f.id
+) select
+r.finca,
+r.lote,
+r.cantidad,
+r.fecha,
+r.rango
+from ranking as r where rango <= 3
+order by r.finca, r.lote
+
+
+select
+f.nombre as finca,
+l.nombre as lote,
+r.fecha as fecha,
+r.cantidad,
+avg(r.cantidad) over (partition by l.id) as promedio_lote
+from cultivo.lote as l
+	join cultivo.recogida as r
+		on r.id_lote = l.id
+	join cultivo.finca as f
+		on l.id_finca = f.id
+
+
+-- Porcentaje de la contribución de cada recogida al total anual por cultivo
+select 
+c.nombre as cultivo,
+r.fecha,
+r.cantidad,
+sum(r.cantidad) over (partition by year(r.fecha), c.id) as total_anual
+from cultivo.recogida as r
+	join cultivo.lote as l
+		on r.id_lote = l.id
+	join cultivo.m_cultivo as c
+		on l.id_cultivo = c.id
